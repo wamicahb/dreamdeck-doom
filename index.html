@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>DOOM &middot; Dream Deck Arcade</title>
+
+    <!--
+      Dream Deck Arcade - DOOM
+      Designed and built 100% by wamicahb@. Original work.
+
+      The Dream Deck panel can't run DOOM inline: the Dreamscape console ships a strict CSP
+      (`script-src 'self'` + `frame-src 'none'`) that blocks all eval/WebAssembly AND all iframes,
+      so the DOOM tile opens THIS page in a new tab instead. Host it anywhere with a normal CSP
+      (GitHub Pages, etc.) and point the games list's DOOM_URL at it.
+
+      DOOM itself runs through the dos.zone player (js-dos / DOSBox-in-WASM booting the freely
+      redistributable DOOM shareware WAD). We embed the player in an iframe so dos.zone fetches the
+      game bundle same-origin (no CORS), and we just wrap it in the Dream Deck-branded shell below.
+      To use a different game, change PLAYER_URL / BUNDLE_URL.
+    -->
+
+    <style>
+      :root {
+        --bg: #0d1117;
+        --surface: #161b22;
+        --border: #30363d;
+        --text: #e6edf3;
+        --text-2: #9198a1;
+        --accent: #4c9eff;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--border);
+        background: var(--surface);
+        flex: 0 0 auto;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+      }
+      .brand .mono {
+        color: var(--accent);
+        font-size: 18px;
+      }
+      .sep {
+        color: var(--text-2);
+        opacity: 0.5;
+      }
+      .title {
+        font-weight: 800;
+        letter-spacing: 3px;
+      }
+      .spacer {
+        margin-left: auto;
+      }
+      .hint {
+        color: var(--text-2);
+        font-size: 12px;
+      }
+      main {
+        flex: 1 1 auto;
+        position: relative;
+        min-height: 0;
+      }
+      #game {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        display: block;
+        background: #000;
+      }
+      .credit {
+        padding: 6px 16px;
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text-2);
+        font-size: 11px;
+        text-align: center;
+        flex: 0 0 auto;
+      }
+      .credit a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <span class="brand"><span class="mono">&#9622;</span> Dream Deck Arcade</span>
+      <span class="sep">&middot;</span>
+      <span class="title">DOOM</span>
+      <span class="spacer"></span>
+      <span class="hint">Arrows move &middot; Ctrl fires &middot; Alt+arrows strafe</span>
+    </header>
+
+    <main>
+      <iframe
+        id="game"
+        title="DOOM"
+        allow="autoplay; fullscreen; gamepad; keyboard-map; cross-origin-isolated"
+        allowfullscreen
+      ></iframe>
+    </main>
+
+    <div class="credit">
+      Dream Deck &middot; designed and built 100% by wamicahb@ &middot; DOOM is id Software's shareware, run via
+      <a id="direct" href="#" target="_blank" rel="noopener">js-dos / dos.zone</a>
+    </div>
+
+    <script>
+      // The DOOM shareware bundle, and the dos.zone player that boots it (same-origin to the bundle,
+      // so no CORS). Swap BUNDLE_URL for any js-dos (.jsdos) bundle to change the game.
+      var BUNDLE_URL = "https://cdn.dos.zone/custom/dos/doom.jsdos";
+      var PLAYER_URL = "https://dos.zone/player/?bundleUrl=" + encodeURIComponent(BUNDLE_URL) + "&anonymous=1";
+      document.getElementById("game").src = PLAYER_URL;
+      document.getElementById("direct").href = PLAYER_URL;
+    </script>
+  </body>
+</html>
