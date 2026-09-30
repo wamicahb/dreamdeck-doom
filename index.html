@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>DOOM &middot; Dream Deck Arcade</title>
+
+    <!--
+      Dream Deck Arcade - DOOM
+      Designed and built 100% by wamicahb@. Original work.
+
+      This page runs the ACTUAL DOOM (js-dos, a DOSBox emulator compiled to WebAssembly, booting the
+      freely-redistributable DOOM shareware WAD). The Dream Deck panel can't run it inline because the
+      Dreamscape console ships a strict `script-src 'self'` CSP that blocks all eval/WebAssembly, so the
+      DOOM tile opens THIS page in a new tab instead. Host it anywhere with a normal CSP (GitHub Pages,
+      S3+CloudFront, etc.) and point the games list's DOOM_URL at it.
+
+      To swap the game, change BUNDLE_URL below to any js-dos (.jsdos) bundle.
+    -->
+
+    <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css" />
+    <style>
+      :root {
+        --bg: #0d1117;
+        --surface: #161b22;
+        --border: #30363d;
+        --text: #e6edf3;
+        --text-2: #9198a1;
+        --accent: #4c9eff;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--border);
+        background: var(--surface);
+        flex: 0 0 auto;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+      .brand .mono {
+        color: var(--accent);
+        font-size: 18px;
+      }
+      .sep {
+        color: var(--text-2);
+        opacity: 0.5;
+      }
+      .title {
+        font-weight: 800;
+        letter-spacing: 3px;
+      }
+      .spacer {
+        margin-left: auto;
+      }
+      .hint {
+        color: var(--text-2);
+        font-size: 12px;
+      }
+      main {
+        flex: 1 1 auto;
+        position: relative;
+        min-height: 0;
+      }
+      #dos {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .fallback {
+        position: absolute;
+        inset: 0;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        text-align: center;
+        padding: 24px;
+      }
+      .fallback h2 {
+        margin: 0;
+        letter-spacing: 2px;
+      }
+      .fallback p {
+        margin: 0;
+        max-width: 460px;
+        color: var(--text-2);
+        line-height: 1.5;
+        font-size: 14px;
+      }
+      .credit {
+        padding: 6px 16px;
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text-2);
+        font-size: 11px;
+        text-align: center;
+        flex: 0 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <span class="brand"><span class="mono">&#9622;</span> Dream Deck Arcade</span>
+      <span class="sep">&middot;</span>
+      <span class="title">DOOM</span>
+      <span class="spacer"></span>
+      <span class="hint">Arrows move &middot; Ctrl fires &middot; Alt+arrows strafe</span>
+    </header>
+
+    <main>
+      <div id="dos"></div>
+      <div class="fallback" id="fallback">
+        <h2>Couldn't load DOOM</h2>
+        <p id="fallback-msg">
+          The emulator or game bundle didn't load. Check your connection, or point BUNDLE_URL at a
+          working js-dos bundle in this page's source.
+        </p>
+      </div>
+    </main>
+
+    <div class="credit">Dream Deck &middot; designed and built 100% by wamicahb@ &middot; DOOM is id Software's shareware, run via js-dos</div>
+
+    <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
+    <script>
+      // Any js-dos (.jsdos) bundle works here. Default: the DOOM shareware bundle from the dos.zone CDN.
+      var BUNDLE_URL = "https://cdn.dos.zone/custom/dos/doom.jsdos";
+
+      function showFallback(msg) {
+        var fb = document.getElementById("fallback");
+        if (msg) document.getElementById("fallback-msg").textContent = msg;
+        if (fb) fb.style.display = "flex";
+      }
+
+      if (typeof Dos !== "function") {
+        showFallback("The js-dos emulator script failed to load from the CDN. This host may be blocking it, or you're offline.");
+      } else {
+        try {
+          Dos(document.getElementById("dos"), {
+            url: BUNDLE_URL,
+            autoStart: true,
+            noCloud: true,
+            mouseCapture: true,
+          });
+        } catch (e) {
+          showFallback("DOOM failed to start: " + (e && e.message ? e.message : e));
+        }
+      }
+    </script>
+  </body>
+</html>
