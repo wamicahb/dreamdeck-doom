@@ -132,11 +132,9 @@
   </head>
   <body>
     <header>
-      <span class="brand"><span class="mono">&#9622;</span> Dream Deck Arcade</span>
+      <span class="brand">Dream Deck</span>
       <span class="sep">&middot;</span>
       <span class="title">DOOM</span>
-      <span class="spacer"></span>
-      <span class="hint">Arrows move &middot; Ctrl fires &middot; Alt+arrows strafe</span>
     </header>
 
     <main>
@@ -157,9 +155,10 @@
 
     <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
     <script>
-      // DOOM shareware bundle, served from GitHub through jsDelivr (sends CORS headers so js-dos can
-      // fetch it cross-origin). Swap for any js-dos (.jsdos) bundle to change the game.
-      var BUNDLE_URL = "https://cdn.jsdelivr.net/gh/hudoborodov/doom_val@main/doom-shareware.jsdos";
+      // DOOM shareware bundle, hosted next to this page in the same repo (same-origin, no CORS). This
+      // copy has a DEFAULT.CFG that enables Sound Blaster so the game has sound. Swap for any js-dos
+      // (.jsdos) bundle to change the game.
+      var BUNDLE_URL = "doom-shareware.jsdos";
 
       function showFallback(msg) {
         var fb = document.getElementById("fallback");
